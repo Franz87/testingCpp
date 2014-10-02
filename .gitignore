@@ -1,0 +1,7 @@
+# Git Ignore #
+##############
+/bin/Debug
+/obj/Debug
+ProvaCpp.cbp
+ProvaCpp.depend
+ProvaCpp.layout
