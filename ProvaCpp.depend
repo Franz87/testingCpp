@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1410805302 source:/Users/franz/Documents/Lavoro/C++/Progetti/ProvaCpp/main.cpp
+	<iostream>
+	<climits>
+	<cmath>
+	<cstdlib>
+	<ctime>
+	<iomanip>
+
