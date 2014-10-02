@@ -47,6 +47,7 @@ void giroCavallo();
 void esPuntatori();
 void mescolaCarte();
 void puntRef();
+void puntFx();
 
 // ####################################  MAIN  #################################### //
 int main()
@@ -77,7 +78,7 @@ void menu()
         cout << "##  16) MCD"          << "\t\t" << "17) tripleNumValRef" << "\t"     << "18) arrayIstogramma  ##" << endl;
         cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
-        cout << "##  25) puntRef"      << "\t\t" << "26) -"               << "\t\t\t" << "27) -                ##" << endl;
+        cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) -                ##" << endl;
         cout << "##  28) -"            << "\t\t" << "29) -"               << "\t\t\t" << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
         cout << "Che programma vuoi usare? ";
@@ -138,6 +139,7 @@ void menu()
             case 23 : esPuntatori(); break;
             case 24 : mescolaCarte(); break;
             case 25 : puntRef(); break;
+            case 26 : puntFx(); break;
         } //end switch
     }
     while(scelta != 0);
@@ -1198,10 +1200,44 @@ int moltiplicaRef(int &x, int &y)
 }
 // ######################################################################################## //
 
+// ####################################### puntFx ####################################### //
+// Fx che visualizza l'uso dei puntatori a funzione (in questo caso array di puntatori a fx)
+void f1(int a);
+void f2(int b);
+void f3(int c);
 
+void puntFx()
+{
+    void (*f[3])(int) = {f1, f2, f3};
+    int scelta;
 
+    cout << "Inserire un numero tra 0 e 2 (3 per terminare): ";
+    cin >> scelta;
 
+    while(scelta >= 0 && scelta < 3)
+    {
+        (*f[scelta])(scelta);
+        cout << "Inserire un numero tra 0 e 2 (3 per terminare): ";
+        cin >> scelta;
+    }
 
+    cout << "Esecuzione programma terminata." << endl;
+}
+
+void f1(int a)
+{
+    cout << "Hai inserito " << a << " quindi è stata chiamata f1" << endl;
+}
+
+void f2(int b)
+{
+    cout << "Hai inserito " << b << " quindi è stata chiamata f2" << endl;
+}
+
+void f3(int c)
+{
+    cout << "Hai inserito " << c << " quindi è stata chiamata f3" << endl;
+}
 
 
 
