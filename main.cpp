@@ -48,6 +48,7 @@ void esPuntatori();
 void mescolaCarte();
 void puntRef();
 void puntFx();
+void manipString();
 
 // ####################################  MAIN  #################################### //
 int main()
@@ -78,7 +79,7 @@ void menu()
         cout << "##  16) MCD"          << "\t\t" << "17) tripleNumValRef" << "\t"     << "18) arrayIstogramma  ##" << endl;
         cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
-        cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) -                ##" << endl;
+        cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
         cout << "##  28) -"            << "\t\t" << "29) -"               << "\t\t\t" << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
         cout << "Che programma vuoi usare? ";
@@ -140,6 +141,7 @@ void menu()
             case 24 : mescolaCarte(); break;
             case 25 : puntRef(); break;
             case 26 : puntFx(); break;
+            case 27 : manipString(); break;
         } //end switch
     }
     while(scelta != 0);
@@ -1208,6 +1210,7 @@ void f3(int c);
 
 void puntFx()
 {
+    // f array di 3 puntatori a fx che prendono ciascuna un argomento int e restituiscono il tipo di dato void
     void (*f[3])(int) = {f1, f2, f3};
     int scelta;
 
@@ -1216,7 +1219,7 @@ void puntFx()
 
     while(scelta >= 0 && scelta < 3)
     {
-        (*f[scelta])(scelta);
+        (*f[scelta])(scelta);   // cfr. pag 301
         cout << "Inserire un numero tra 0 e 2 (3 per terminare): ";
         cin >> scelta;
     }
@@ -1238,8 +1241,26 @@ void f3(int c)
 {
     cout << "Hai inserito " << c << " quindi è stata chiamata f3" << endl;
 }
+// ############################################################################################# //
 
+// ####################################### manipString() ####################################### //
+void manipString()
+{
+    char x[] = "Happy Birthday to You";
+    char y[25], z[15];
 
+    cout << "\nLa stringa nell'array x: " << x
+         << "\nLa stringa nell'array y: " << strcpy(y, x) << endl;  // copia x in y
+
+    // Copia i primi 14 caratteri dell'array x in y
+    strncpy(z, x, 14); // non copia il carattere nullo
+    // All'array z viene aggiunto il carattere terminatore perché la chiamata a strncpy non esegue
+    // in automatico questa operazione. Infatti il terzo argomento è minore della lunghezza della stringa
+    // passata come secondo argomento)
+    z[14] = '\0';
+
+    cout << "La stringa nell'array z: " << z << endl;
+}
 
 
 
