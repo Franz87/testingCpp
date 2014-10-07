@@ -49,6 +49,7 @@ void mescolaCarte();
 void puntRef();
 void puntFx();
 void manipString();
+void pokerHand();
 
 // ####################################  MAIN  #################################### //
 int main()
@@ -80,7 +81,7 @@ void menu()
         cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
         cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
-        cout << "##  28) -"            << "\t\t" << "29) -"               << "\t\t\t" << " 0) Termina          ##" << endl;
+        cout << "##  28) pokerHand"    << "\t"   << "29) -"               << "\t\t\t" << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
         cout << "Che programma vuoi usare? ";
         cin >> scelta;
@@ -142,6 +143,7 @@ void menu()
             case 25 : puntRef(); break;
             case 26 : puntFx(); break;
             case 27 : manipString(); break;
+            case 28 : pokerHand(); break;
         } //end switch
     }
     while(scelta != 0);
@@ -1260,10 +1262,135 @@ void manipString()
     z[14] = '\0';
 
     cout << "La stringa nell'array z: " << z << endl;
+
+    char c1[20] = "Happy ";
+    char c2[] = "New Year ";
+    char c3[40] = "";
+
+    cout << "\nc1 = " << c1 << "\nc2 = " << c2 << endl;
+    cout << "strcat(c1, c2) = " << strcat(c1, c2) << endl;
+    cout << "strncat(c3, c1, 6) = " << strncat(c3, c1, 6) << endl;
+    cout << "strcat(c3, c1) = " << strcat(c3, c1) << endl;
+
+    char *s1 = "Happy New Year";
+    char *s2 = "Happy New Year";
+    char *s3 = "Happy Holidays";
+
+    // strcmp confronta due stringhe: 0 (uguaglianza), pos (seconda stringa maggiore) neg (prima stringa maggiore)
+    cout << "\ns1 = " << s1 << "\ns2 = " << s2 << "\ns3 = " << s3
+         << "\n\nstrcmp(s1, s2) = " << setw(2) << strcmp(s1, s2)
+         << "\nstrcmp(s1, s3) = " << setw(2) << strcmp(s1, s3)
+         << "\nstrcmp(s3, s1) = " << setw(2) << strcmp(s3, s1) << endl;
+
+    cout << "\nstrncmp(s1, s3, 6) = " << setw(2) << strncmp(s1, s3, 6)
+         << "\nstrncmp(s1, s3, 7) = " << setw(2) << strncmp(s1, s3, 7)
+         << "\nstrncmp(s3, s1, 7) = " << setw(2) << strncmp(s3, s1, 7) << endl;
+
+    char stringa[] = "This is a sentence with 7 tokens";
+    char *tokenPtr;
+
+    cout << "\nLa stringa da dividere in token:" << stringa << endl;
+    cout << "I tokens sono:" << endl;
+
+    // Attenzione che la fx strtok modifica la stringa originale!
+    tokenPtr = strtok(stringa, " ");    // cfr. pag. 310
+
+    while(tokenPtr != NULL)
+    {
+        cout << tokenPtr << endl;
+        tokenPtr = strtok(NULL, " ");
+    }
+
+    char *string1 = "abcdefghijklmnopqrstuvwxyz";
+
+    cout << "\nLa lunghezza di \"" << string1 << "\" è: " << strlen(string1) << endl;
+}
+// ########################################################################################### //
+
+// ####################################### pokerHand() ####################################### //
+// Fx che mescola un mazzo di carte e ne distribuisce 5 al giocatore (poker), quindi controlla
+// il punteggio ottenuto con le carte (coppia, doppia coppia, full, poker ...)
+// Vengono utilizzate le funzioni già implementate per inizializzare e mescolare il mazzo, viene
+// modificata la fx che si occupa della distribuzione delle carte.
+
+//void mescola(int m[0][13]);
+void distribuisciMano(int m[][13], const char *s[], const char *v[]);
+void checkMano(int mano[4][13], const char *s[], const char *v[]);
+
+void pokerHand()
+{
+    const char *seme[4] = {"Cuori", "Fiori", "Quadri", "Picche"};
+    const char *valore[13] = {"Asso", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette", "Otto", "Nove", "Dieci", "Jack", "Regina", "Re"};
+    int mazzo[4][13] = {0}; //matrice che rappresenta: righe -> seme, colonne -> valore (es. mazzo[2][12] = Re di Quadri)
+
+    srand(time(0));
+
+    mescola(mazzo);
+    distribuisciMano(mazzo, seme, valore);
 }
 
+void distribuisciMano(int m[][13], const char *s[], const char *v[])
+{
+    int mano[4][13] = {0};
 
+    cout << endl;
+    for(int carta = 1; carta <= 5; carta++) // prime 5 carte
+    {
+        for(int i = 0; i <= 3; i++)
+        {
+            for(int j = 0; j <= 12; j++)
+            {
+                if(m[i][j] == carta)
+                {
+                    cout << setw(8) << setiosflags(ios::right) << v[j]
+                         << " di "
+                         << setw(2) << setiosflags(ios::left) << s[i]
+                         << endl;
 
+                    mano[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    checkMano(mano, s, v);
+}
+
+void checkMano(int mano[4][13], const char *s[], const char *v[])
+{
+    int contaUno = 0, contaCoppia = 0;
+    //int matrice[4][13] = {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0};
+
+    for(int i = 0; i <= 3; i++)
+    {
+        for(int j = 0; j <= 12; j++)
+            cout << mano[i][j];
+        cout << endl;
+    }
+
+    for(int j = 0; j <= 12; j++)
+    {
+        for(int i = 0; i <= 3; i++)
+        {
+            if(mano[i][j] == 1)
+                contaUno += 1;
+        }
+
+        if(contaUno == 2)
+        {
+            cout << "Hai una coppia di: " << v[j] << endl;
+            contaCoppia += 1;
+        }
+        if(contaUno == 3)
+            cout << "Hai un tris di: " << v[j] << endl;
+        if(contaUno == 4)
+            cout << "Hai un poker di: " << v[j] << endl;
+        if(contaCoppia == 2)
+            cout << "Hai una doppia coppia" << endl;
+
+        contaUno = 0;
+    }
+}
 
 
 
