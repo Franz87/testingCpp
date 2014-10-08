@@ -1316,6 +1316,7 @@ void manipString()
 //void mescola(int m[0][13]);
 void distribuisciMano(int m[][13], const char *s[], const char *v[]);
 void checkMano(int mano[4][13], const char *s[], const char *v[]);
+bool checkReale(int mano[4][13], bool reale);
 
 void pokerHand()
 {
@@ -1326,7 +1327,16 @@ void pokerHand()
     srand(time(0));
 
     mescola(mazzo);
-    distribuisciMano(mazzo, seme, valore);
+    //distribuisciMano(mazzo, seme, valore);
+
+    bool reale = false;
+    int passo = 0;
+    do
+    {
+        checkReale(mazzo, reale);
+        passo++;
+    } while(reale != true);
+    cout << "Scala reale trovata in " << passo << " passi" << endl;
 }
 
 void distribuisciMano(int m[][13], const char *s[], const char *v[])
@@ -1359,39 +1369,93 @@ void distribuisciMano(int m[][13], const char *s[], const char *v[])
 void checkMano(int mano[4][13], const char *s[], const char *v[])
 {
     int contaUno = 0, contaCoppia = 0;
-    //int matrice[4][13] = {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0};
+    int contaContigue = 0;
+    int coppia = 0, d_coppia = 0, tris = 0, poker = 0, colore = 0, scala_colore = 0, scala_reale = 0;
 
-    for(int i = 0; i <= 3; i++)
-    {
-        for(int j = 0; j <= 12; j++)
-            cout << mano[i][j];
-        cout << endl;
-    }
-
+    // ciclo che scorre le colonne
     for(int j = 0; j <= 12; j++)
     {
         for(int i = 0; i <= 3; i++)
         {
             if(mano[i][j] == 1)
-                contaUno += 1;
+                contaUno += 1;  // conta quante carte dello stesso valore ci sono per ogni colonna
         }
 
-        if(contaUno == 2)
+        if(contaUno == 2)   // controlla COPPIA
         {
             cout << "Hai una coppia di: " << v[j] << endl;
-            contaCoppia += 1;
+            contaCoppia += 1;   // contatore per le coppie
+            coppia = 1;
         }
-        if(contaUno == 3)
+        if(contaUno == 3)   // controlla TRIS
+        {
             cout << "Hai un tris di: " << v[j] << endl;
-        if(contaUno == 4)
+            tris = 1;
+        }
+        if(contaUno == 4)   // controlla POKER
+        {
             cout << "Hai un poker di: " << v[j] << endl;
-        if(contaCoppia == 2)
+            poker = 1;
+        }
+        if(contaCoppia == 2)    // controlla DOPPIA COPPIA
+        {
             cout << "Hai una doppia coppia" << endl;
+            d_coppia = 1;
+            break;
+        }
 
-        contaUno = 0;
+        contaUno = 0;   // azzera il contatore per usarlo nelle colonne successive
     }
+
+    // ciclo che scorre le righe
+    for(int i = 0; i <= 3; i++)
+    {
+        for(int j = 0; j <= 12; j++)
+        {
+            if(mano[i][j] == 1)
+                contaUno += 1;  // conta quante carte dello stesso valore ci sono per ogni riga
+            if(contaContigue < 4 && mano[i][j] == 1 && mano[i][j+1] == 1)
+                contaContigue++;    // conta il numero di carte contigue per seme (riga)
+        }
+
+        if(contaUno == 5)   // controlla COLORE
+        {
+            cout << "Hai colore a " << s[i] << endl;
+            colore = 1;
+        }
+        contaUno = 0;
+
+        if(contaContigue == 4)  // controlla Scala Colore
+        {
+            cout << "Hai scala colore a " << s[i] << endl;
+            scala_colore = 1;
+        }
+        contaContigue = 0;
+
+        // controlla la Scala Reale (10,J,Q,K,A)
+        if(mano[i][0] == 1 && mano[i][9] == 1 && mano[i][10] == 1 && mano[i][11] == 1 && mano[i][12] == 1)
+        {
+            cout << "Scala Reale a " << s[i] << endl;
+            scala_reale = 1;
+        }
+    }
+
+    if(coppia == 0 && d_coppia == 0 && tris == 0 && poker == 0 && colore == 0 && scala_colore == 0 && scala_reale == 0)
+        cout << "Non hai niente!" << endl;
 }
 
+bool checkReale(int mano[4][13], bool reale)
+{
+    // ciclo che scorre le righe
+    for(int i = 0; i <= 3; i++)
+    {
+        // controlla la Scala Reale (10,J,Q,K,A)
+        if(mano[i][0] == 1 && mano[i][9] == 1 && mano[i][10] == 1 && mano[i][11] == 1 && mano[i][12] == 1)
+            return (reale = true);
+        else
+            return (reale = false);
+    }
+}
 
 
 
