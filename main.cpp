@@ -50,6 +50,7 @@ void puntRef();
 void puntFx();
 void manipString();
 void pokerHand();
+void intToString();
 
 // ####################################  MAIN  #################################### //
 int main()
@@ -81,7 +82,7 @@ void menu()
         cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
         cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
-        cout << "##  28) pokerHand"    << "\t"   << "29) -"               << "\t\t\t" << " 0) Termina          ##" << endl;
+        cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t"     << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
         cout << "Che programma vuoi usare? ";
         cin >> scelta;
@@ -144,6 +145,7 @@ void menu()
             case 26 : puntFx(); break;
             case 27 : manipString(); break;
             case 28 : pokerHand(); break;
+            case 29 : intToString(); break;
         } //end switch
     }
     while(scelta != 0);
@@ -1316,7 +1318,8 @@ void manipString()
 //void mescola(int m[0][13]);
 void distribuisciMano(int m[][13], const char *s[], const char *v[]);
 void checkMano(int mano[4][13], const char *s[], const char *v[]);
-bool checkReale(int mano[4][13], bool reale);
+
+bool checkscala = false;    // variabile usata per contare il numero di passi necessari per trovare una scala reale
 
 void pokerHand()
 {
@@ -1327,30 +1330,36 @@ void pokerHand()
     srand(time(0));
 
     mescola(mazzo);
-    //distribuisciMano(mazzo, seme, valore);
+    distribuisciMano(mazzo, seme, valore);  // occorre disabilitarlo per utilizzare il codice sottostante
 
-    bool reale = false;
+    // Procedimento utilizzato per contare il numero di passi necessario a trovare un determinato tipo di punteggio
+    /*
     int passo = 0;
     do
     {
-        checkReale(mazzo, reale);
+        distribuisciMano(mazzo, seme, valore);
         passo++;
-    } while(reale != true);
-    cout << "Scala reale trovata in " << passo << " passi" << endl;
+        cout << "Passo numero: " << passo << endl;
+    } while(checkscala != true);
+    cout << "Scala Reale trovata in " << passo << " passi" << endl;
+    checkscala = false;
+    */
 }
 
 void distribuisciMano(int m[][13], const char *s[], const char *v[])
 {
     int mano[4][13] = {0};
+    int cartaN = 0;
 
     cout << endl;
-    for(int carta = 1; carta <= 5; carta++) // prime 5 carte
+    for(int conta = 1; conta <= 5; conta++) // 5 carte casuali nel mazzo
     {
+        cartaN = 1 + rand() % 52;
         for(int i = 0; i <= 3; i++)
         {
             for(int j = 0; j <= 12; j++)
             {
-                if(m[i][j] == carta)
+                if(m[i][j] == cartaN)
                 {
                     cout << setw(8) << setiosflags(ios::right) << v[j]
                          << " di "
@@ -1437,25 +1446,251 @@ void checkMano(int mano[4][13], const char *s[], const char *v[])
         {
             cout << "Scala Reale a " << s[i] << endl;
             scala_reale = 1;
+            //checkscala = true;
         }
     }
 
     if(coppia == 0 && d_coppia == 0 && tris == 0 && poker == 0 && colore == 0 && scala_colore == 0 && scala_reale == 0)
         cout << "Non hai niente!" << endl;
 }
+// ############################################################################################# //
 
-bool checkReale(int mano[4][13], bool reale)
+
+// ####################################### intToString() ####################################### //
+// Fx che legge un intero inserito dall'utente e lo traduce "a parole" in stringa
+// Ad es. 12543 = "DodicimilaCinquecentoQuarantaTre"
+
+void translateIntStr(int numero, int n[], int s);
+void creaA(int numero, int n[], int s);
+string unita(int numero);
+string spec(int numero);
+string decine(int n[], int s);
+string centinaia(int n[], int s);
+string migliaia(int n[], int s);
+string centmigl(int n[], int s);
+string centmiglspec(int n[], int s);
+
+void intToString()
 {
-    // ciclo che scorre le righe
-    for(int i = 0; i <= 3; i++)
+    int num = 0;
+    const int sizeA = 6;
+    int numA[sizeA] = {0};
+
+    cout << "\nInserisci un numero intero (3 cifre): ";
+    cin >> num;
+
+    for(int i = 0; i < sizeA; i++)
+        cout << " [" << i << "]: " << numA[i];
+    creaA(num, numA, sizeA);
+
+    cout << endl;
+
+    for(int i = 0; i < sizeA; i++)
+        cout << " [" << i << "]: " << numA[i];
+
+    translateIntStr(num, numA, sizeA);
+}
+
+void creaA(int numero, int n[], int s)
+{
+    for(int i = (s-1); i >= 0; i--)
     {
-        // controlla la Scala Reale (10,J,Q,K,A)
-        if(mano[i][0] == 1 && mano[i][9] == 1 && mano[i][10] == 1 && mano[i][11] == 1 && mano[i][12] == 1)
-            return (reale = true);
-        else
-            return (reale = false);
+        if(numero > 0)
+        {
+            n[i] = numero % 10;
+            numero /= 10;
+        }
     }
 }
+
+void translateIntStr(int numero, int n[], int s)
+{
+    int u = 0, d = 0;
+
+    cout << endl;
+
+    if(numero < 10)
+        cout << unita(numero) << endl;
+
+    if(numero >= 10 && numero < 20)
+        cout << spec(numero) << endl;
+
+    if(numero >= 20 && numero < 100)
+        cout << decine(n, s) << "" << unita(n[5]) << endl;
+
+    if(numero >= 100 && numero < 1000 && n[4] != 1)
+        cout << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 100 && numero < 1000 && n[4] == 1)
+        cout << centinaia(n, s) << "" << decine(n, s) << endl;
+
+    if(numero >= 1000 && numero < 10000 && n[4] != 1)
+        cout << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 1000 && numero < 10000 && n[4] == 1)
+        cout << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+
+    if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] != 0 && n[4] != 1)       // es. 023472
+        cout << centmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] != 0 && n[4] == 1)  // es. 023412
+        cout << centmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+    else if(numero >= 10000 && numero < 100000 && n[1] == 1 && n[2] != 0 && n[4] != 1)  // es. 012538
+        cout << centmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 10000 && numero < 100000 && n[1] == 1 && n[2] != 0 && n[4] == 1)  // es. 012516
+        cout << centmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+    else if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] == 0 && n[4] != 1)  // es. 030546
+        cout << centmigl(n, s) << "MILA" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] == 0 && n[4] == 1)  // es. 030516
+        cout << centmigl(n, s) << "MILA" << centinaia(n, s) << "" << decine(n, s) << endl;
+}
+
+string unita(int numero)
+{
+    string stringa = "";
+    switch(numero)
+    {
+        case 1 : (stringa = "UNO"); break;
+        case 2 : (stringa = "DUE"); break;
+        case 3 : (stringa = "TRE"); break;
+        case 4 : (stringa = "QUATTRO"); break;
+        case 5 : (stringa = "CINQUE"); break;
+        case 6 : (stringa = "SEI"); break;
+        case 7 : (stringa = "SETTE"); break;
+        case 8 : (stringa = "OTTO"); break;
+        case 9 : (stringa = "NOVE"); break;
+    }
+
+    return stringa;
+}
+
+string spec(int numero)
+{
+    string stringa = "";
+    switch(numero)
+    {
+        case 10 : (stringa = "DIECI"); break;
+        case 11 : (stringa = "UNDICI"); break;
+        case 12 : (stringa = "DODICI"); break;
+        case 13 : (stringa = "TREDICI"); break;
+        case 14 : (stringa = "QUATTORDICI"); break;
+        case 15 : (stringa = "QUINDICI"); break;
+        case 16 : (stringa = "SEDICI"); break;
+        case 17 : (stringa = "DICIASSETTE"); break;
+        case 18 : (stringa = "DICIOTTO"); break;
+        case 19 : (stringa = "DICIANNOVE"); break;
+    }
+
+    return stringa;
+}
+
+string decine(int n[], int s)
+{
+    string stringa = "";
+
+    switch(n[4])
+    {
+        case 1 : (stringa = spec(10+n[5])); break;
+        case 2 : (stringa = "VENTI"); break;
+        case 3 : (stringa = "TRENTA"); break;
+        case 4 : (stringa = "QUARANTA"); break;
+        case 5 : (stringa = "CINQUANTA"); break;
+        case 6 : (stringa = "SESSANTA"); break;
+        case 7 : (stringa = "SETTANTA"); break;
+        case 8 : (stringa = "OTTANTA"); break;
+        case 9 : (stringa = "NOVANTA"); break;
+    }
+
+    return stringa;
+}
+
+string centinaia(int n[], int s)
+{
+    string stringa = "";
+
+    switch(n[3])
+    {
+        case 1 : (stringa = "CENTO"); break;
+        case 2 : (stringa = "DUECENTO"); break;
+        case 3 : (stringa = "TRECENTO"); break;
+        case 4 : (stringa = "QUATTROCENTO"); break;
+        case 5 : (stringa = "CINQUECENTO"); break;
+        case 6 : (stringa = "SEICENTO"); break;
+        case 7 : (stringa = "SETTECENTO"); break;
+        case 8 : (stringa = "OTTOCENTO"); break;
+        case 9 : (stringa = "NOVECENTO"); break;
+    }
+
+    return stringa;
+}
+
+string migliaia(int n[], int s)
+{
+    string stringa = "";
+
+    switch(n[2])
+    {
+        case 1 : (stringa = "MILLE"); break;
+        case 2 : (stringa = "DUEMILA"); break;
+        case 3 : (stringa = "TREMILA"); break;
+        case 4 : (stringa = "QUATTROMILA"); break;
+        case 5 : (stringa = "CINQUEMILA"); break;
+        case 6 : (stringa = "SEIMILA"); break;
+        case 7 : (stringa = "SETTEMILA"); break;
+        case 8 : (stringa = "OTTOMILA"); break;
+        case 9 : (stringa = "NOVEMILA"); break;
+    }
+
+    return stringa;
+}
+
+string centmigl(int n[], int s)
+{
+    string stringa = "";
+
+    switch(n[1])
+    {
+        case 2 : (stringa = "VENTI"); break;
+        case 3 : (stringa = "TRENTA"); break;
+        case 4 : (stringa = "QUARANTA"); break;
+        case 5 : (stringa = "CINQUANTA"); break;
+        case 6 : (stringa = "SESSANTA"); break;
+        case 7 : (stringa = "SETTANTA"); break;
+        case 8 : (stringa = "OTTANTA"); break;
+        case 9 : (stringa = "NOVANTA"); break;
+    }
+
+    return stringa;
+}
+
+string centmiglspec(int n[], int s)
+{
+    string stringa = "";
+    switch(10+n[2])
+    {
+        case 10 : (stringa = "DIECIMILA"); break;
+        case 11 : (stringa = "UNDICIMILA"); break;
+        case 12 : (stringa = "DODICIMILA"); break;
+        case 13 : (stringa = "TREDICIMILA"); break;
+        case 14 : (stringa = "QUATTORDICIMILA"); break;
+        case 15 : (stringa = "QUINDICIMILA"); break;
+        case 16 : (stringa = "SEDICIMILA"); break;
+        case 17 : (stringa = "DICIASSETTEMILA"); break;
+        case 18 : (stringa = "DICIOTTOMILA"); break;
+        case 19 : (stringa = "DICIANNOVEMILA"); break;
+    }
+
+    return stringa;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
