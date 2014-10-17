@@ -82,7 +82,7 @@ void menu()
         cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
         cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
-        cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t"     << " 0) Termina          ##" << endl;
+        cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t\t"     << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
         cout << "Che programma vuoi usare? ";
         cin >> scelta;
@@ -1460,6 +1460,7 @@ void checkMano(int mano[4][13], const char *s[], const char *v[])
 // Fx che legge un intero inserito dall'utente e lo traduce "a parole" in stringa
 // Ad es. 12543 = "DodicimilaCinquecentoQuarantaTre"
 
+/*
 void translateIntStr(int numero, int n[], int s);
 void creaA(int numero, int n[], int s);
 string unita(int numero);
@@ -1467,6 +1468,8 @@ string spec(int numero);
 string decine(int n[], int s);
 string centinaia(int n[], int s);
 string migliaia(int n[], int s);
+string decmigl(int n[], int s);
+string decmiglspec(int n[], int s);
 string centmigl(int n[], int s);
 string centmiglspec(int n[], int s);
 
@@ -1476,7 +1479,7 @@ void intToString()
     const int sizeA = 6;
     int numA[sizeA] = {0};
 
-    cout << "\nInserisci un numero intero (3 cifre): ";
+    cout << "\nInserisci un numero intero (max 6 cifre): ";
     cin >> num;
 
     for(int i = 0; i < sizeA; i++)
@@ -1529,17 +1532,34 @@ void translateIntStr(int numero, int n[], int s)
         cout << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
 
     if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] != 0 && n[4] != 1)       // es. 023472
-        cout << centmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+        cout << decmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
     else if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] != 0 && n[4] == 1)  // es. 023412
-        cout << centmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+        cout << decmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
     else if(numero >= 10000 && numero < 100000 && n[1] == 1 && n[2] != 0 && n[4] != 1)  // es. 012538
-        cout << centmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+        cout << decmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
     else if(numero >= 10000 && numero < 100000 && n[1] == 1 && n[2] != 0 && n[4] == 1)  // es. 012516
-        cout << centmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+        cout << decmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
     else if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] == 0 && n[4] != 1)  // es. 030546
-        cout << centmigl(n, s) << "MILA" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+        cout << decmigl(n, s) << "MILA" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
     else if(numero >= 10000 && numero < 100000 && n[1] != 1 && n[2] == 0 && n[4] == 1)  // es. 030516
-        cout << centmigl(n, s) << "MILA" << centinaia(n, s) << "" << decine(n, s) << endl;
+        cout << decmigl(n, s) << "MILA" << centinaia(n, s) << "" << decine(n, s) << endl;
+
+    if(numero >= 100000 && numero < 1000000 && n[0] != 1 && n[1] != 1 && n[2] != 0 && n[4] != 1)       // es. 245723
+        cout << centmigl(n, s) << "" << decmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] != 1 && n[1] != 1 && n[2] != 0 && n[4] == 1)       // es. 245713
+        cout << centmigl(n, s) << "" << decmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] == 1 && n[1] != 1 && n[2] != 0 && n[4] != 1)       // es. 145723
+        cout << "CENTO" << "" << decmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] == 1 && n[1] != 1 && n[2] != 0 && n[4] == 1)       // es. 145713
+        cout << "CENTO" << "" << decmigl(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] == 1 && n[1] == 1 && n[2] != 0 && n[4] != 1)       // es. 115723
+        cout << "CENTO" << "" << decmiglspec(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] == 1 && n[1] == 1 && n[2] != 0 && n[4] == 1)       // es. 115713
+        cout << "CENTO" << "" << decmiglspec(n, s) << "" << migliaia(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] == 1 && n[1] == 1 && n[2] == 0 && n[4] != 1)       // es. 110743
+        cout << "CENTO" << "" << decmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << "" << unita(n[5]) << endl;
+    else if(numero >= 100000 && numero < 1000000 && n[0] == 1 && n[1] == 1 && n[2] == 0 && n[4] == 1)       // es. 110713
+        cout << "CENTO" << "" << decmiglspec(n, s) << "" << centinaia(n, s) << "" << decine(n, s) << endl;
 }
 
 string unita(int numero)
@@ -1641,7 +1661,7 @@ string migliaia(int n[], int s)
     return stringa;
 }
 
-string centmigl(int n[], int s)
+string decmigl(int n[], int s)
 {
     string stringa = "";
 
@@ -1655,6 +1675,45 @@ string centmigl(int n[], int s)
         case 7 : (stringa = "SETTANTA"); break;
         case 8 : (stringa = "OTTANTA"); break;
         case 9 : (stringa = "NOVANTA"); break;
+    }
+
+    return stringa;
+}
+
+string decmiglspec(int n[], int s)
+{
+    string stringa = "";
+    switch(10+n[2])
+    {
+        case 10 : (stringa = "DIECIMILA"); break;
+        case 11 : (stringa = "UNDICIMILA"); break;
+        case 12 : (stringa = "DODICIMILA"); break;
+        case 13 : (stringa = "TREDICIMILA"); break;
+        case 14 : (stringa = "QUATTORDICIMILA"); break;
+        case 15 : (stringa = "QUINDICIMILA"); break;
+        case 16 : (stringa = "SEDICIMILA"); break;
+        case 17 : (stringa = "DICIASSETTEMILA"); break;
+        case 18 : (stringa = "DICIOTTOMILA"); break;
+        case 19 : (stringa = "DICIANNOVEMILA"); break;
+    }
+
+    return stringa;
+}
+
+string centmigl(int n[], int s)
+{
+    string stringa = "";
+
+    switch(n[0])
+    {
+        case 2 : (stringa = "DUECENTO"); break;
+        case 3 : (stringa = "TRECENTO"); break;
+        case 4 : (stringa = "QUATTROCENTO"); break;
+        case 5 : (stringa = "CINQUECENTO"); break;
+        case 6 : (stringa = "SEICENTO"); break;
+        case 7 : (stringa = "SETTECENTO"); break;
+        case 8 : (stringa = "OTTOCENTO"); break;
+        case 9 : (stringa = "NOVECENTO"); break;
     }
 
     return stringa;
@@ -1679,13 +1738,83 @@ string centmiglspec(int n[], int s)
 
     return stringa;
 }
+*/
 
+void creaArray(int num, int aNum[], int s, int &cont);
+void translateIntStr(int num, int aNum[], int s, int cont);
+void unita(int num, int aNum[], int s, string u[]);
+void decine(int num, int aNum[], int s, string u[], string d[]);
+void centinaia(int num, int aNum[], int s, string u[], string d[]);
 
+void intToString()
+{
+    int num = 0;
+    const int len = 6;
+    int arrayNum[len] = {0};    // inizializza array dei numeri a 0
+    int cifre = 0;   // conta cifre
 
+    cout << "\nInserisci un numero intero (max 6 cifre): ";
+    cin >> num;
 
+    creaArray(num, arrayNum, len, cifre);
 
+    translateIntStr(num, arrayNum, len, cifre);
+}
 
+void creaArray(int num, int aNum[], int s, int &cont)
+{
+    // popola array con il numero inserito
+    for(int i = (s-1); i >= 0; i--)
+    {
+        if(num > 0)
+        {
+            aNum[i] = num % 10;
+            num /= 10;
+            cont++;
+        }
+    }
+}
 
+void translateIntStr(int num, int aNum[], int s, int cont)
+{
+    string u[20] = {"", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE",
+                    "DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", "SEDICI",
+                    "DICIASSETTE", "DICIOTTO", "DICIANNOVE"};
+    string d[10] = {"", "DIECI", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"};
+
+    switch(cont)
+    {
+        case 1 : unita(num, aNum, s, u); break;
+        case 2 : decine(num, aNum, s, u, d); break;
+        case 3 : centinaia(num, aNum, s, u, d); break;
+    }
+}
+
+void unita(int num, int aNum[], int s, string u[])
+{
+    cout << u[num] << endl;
+}
+
+void decine(int num, int aNum[], int s, string u[], string d[])
+{
+    if(aNum[4] == 1)
+        cout << u[num] << endl;
+    else
+        cout << d[aNum[4]] << " " << u[aNum[5]] << endl;
+}
+
+void centinaia(int num, int aNum[], int s, string u[], string d[])
+{
+    if(aNum[3] == 1)    // ERRORE!!!
+    {
+        if(aNum[4] == 1)
+            cout << "CENTO" << u[10+aNum[5]] << endl;
+        else
+            cout << "CENTO" << d[aNum[4]] << " " << u[aNum[5]] << endl;
+    }
+    else
+        cout << u[aNum[3]] << "CENTO" << d[aNum[4]] << " " << u[aNum[5]] << endl;
+}
 
 
 
