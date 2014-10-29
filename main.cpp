@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
+#include <cctype>
 
 using namespace std;
 
@@ -51,6 +52,10 @@ void puntFx();
 void manipString();
 void pokerHand();
 void intToString();
+void scambioFurbo();
+void checkVocCons();
+void dollariEuro();
+void testStruct();
 
 // ####################################  MAIN  #################################### //
 int main()
@@ -82,7 +87,11 @@ void menu()
         cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
         cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
-        cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t\t"     << " 0) Termina          ##" << endl;
+        cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t\t"   << "30) scambioFurbo     ##" << endl;
+        cout << "##  31) checkVocCons" << "\t"   << "32) dollariEuro"     << "\t\t"   << "33) testStruct       ##" << endl;
+        cout << "##  34) "             << "\t\t" << "35) "                << "\t\t\t" << "36)                  ##" << endl;
+        cout << "##  37) "             << "\t\t" << "38) "                << "\t\t\t" << "39)                  ##" << endl;
+        cout << "##  40) "             << "\t\t" << "41) "                << "\t\t\t" << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
         cout << "Che programma vuoi usare? ";
         cin >> scelta;
@@ -146,6 +155,12 @@ void menu()
             case 27 : manipString(); break;
             case 28 : pokerHand(); break;
             case 29 : intToString(); break;
+            case 30 : scambioFurbo(); break;
+            case 31 : checkVocCons(); break;
+            case 32 : dollariEuro(); break;
+            case 33 : testStruct(); break;
+
+            default : cout << "Programma non esistente" << endl; break;
         } //end switch
     }
     while(scelta != 0);
@@ -201,7 +216,7 @@ void pariDispari()
 void minMax()
 {
     int n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0;
-    int minimo, massimo;
+    int minimo = 0, massimo = 0;
 
     cout << "\nInserisci cinque numeri interi: ";
     cin >> n1 >> n2 >> n3 >> n4 >> n5;
@@ -1474,21 +1489,21 @@ string centmigl(int num, int aNum[], int s, string u[], string d[]);
 void intToString()
 {
     int num = 0;
-    const int len = 6;
-    int arrayNum[len] = {0};    // inizializza array dei numeri a 0
+    const int LEN = 6;
+    int arrayNum[LEN] = {0};    // inizializza array dei numeri a 0
     int cifre = 0;   // conta cifre
 
     cout << "\nInserisci un numero intero (max 6 cifre): ";
     cin >> num;
 
-    creaArray(num, arrayNum, len, cifre);
+    creaArray(num, arrayNum, LEN, cifre);
 
-    for(int i = 0; i < len; i++)
+    for(int i = 0; i < LEN; i++)
         cout << "[" << i << "]=" << arrayNum[i] << " ";
 
     cout << endl;
 
-    translateIntStr(num, arrayNum, len, cifre);
+    translateIntStr(num, arrayNum, LEN, cifre);
 }
 
 // Fx che divide il numero in cifre e le inserisce in un array
@@ -1628,6 +1643,131 @@ string centmigl(int num, int aNum[], int s, string u[], string d[])
     return tot;
 }
 // #################################################################################### //
+
+// ################################# scambioFurbo() ################################### //
+// Fx che scambia il valore di due numeri senza utilizzare una terza variabile.
+// Quindi effettua un controllo su migliaia di combinazioni diverse per testarne la correttezza
+
+void scambioFurbo()
+{
+    for(int i = 0; i < 100; i ++)
+        for(int j = 0; j < 100; j++)
+        {
+            int vi = i, vj = j;
+
+            // Formula: il trucco è che l'assegnazione (vj = vi) non cambia subito il valore di vj
+            // (vj = vi) prende valore vi, quindi alla fine otteniamo semplicemente vi = vj - vi + vi
+            // che assegna il valore di vj a vi ed effettua quindi lo scambio
+            vi = vj - vi + (vj = vi);
+
+            if(vi != j || vj != i)
+                cout << "Valori non corretti: " << vi << " e " << vj << endl;
+            else
+                cout << i << " " << j << " --- " << vi << " " << vj << endl;
+        }
+}
+// ################################################################################################# //
+
+// ####################################### checkVocCons() ########################################## //
+// Fx che dato un carattere in input determina se è una vocale / costante o niente.
+// Fa uso della libreria <cctype> per la manipolazione dei caratteri
+void checkVocCons()
+{
+    char c = ' ', cUp = ' ';
+    string vocali = "AEIOU";
+    string consonanti = "BCDFGHJKLMNPQRSTVZ";
+
+    cout << "Inserisci una lettera: ";
+    cin >> c;
+
+    cUp = toupper(c);  // rende maiuscolo il carattere inserito, per evitare il doppio controllo
+    if(isalpha(cUp))  // controlla che sia una lettera delll'alfabeto
+    {
+        // find() cerca il carattere nella stringa specificata e ritorna la sua posizione (da 0)
+        if(vocali.find(cUp) != string::npos)    //npos = valore speciale ritornato dalla fx in caso di mancato ritrovamento
+            cout << "Vocale" << endl;
+        else if(consonanti.find(cUp) != string::npos)
+            cout << "Consonante" << endl;
+    }
+    else
+        cout << "Non è una lettera dell'alfabeto" << endl;
+}
+// ################################################################################################ //
+
+// ####################################### dollariEuro() ########################################## //
+// Fx che compara somma di denaro in dollari ed euro e restituisce quale vale di più in base al tasso di cambio
+void dollariEuro()
+{
+    int dollari = 0, euro = 0;
+    double tasso = 1.35;
+
+    cout << "Cifra in dollari: ";
+    cin >> dollari;
+    cout << "Cifra in euro: ";
+    cin >> euro;
+
+    double differenza = (euro * tasso) - dollari;
+
+    // i numeri espressi in double/float non sono valutaticon precisione, infatti facendo (8-6.4) == 1.6 il compilatore
+    // torna false (anche se il risultato sarebbe 1.6 == 1.6).
+    // Per ovviare si controlla che la differenza (in valore assoluto "abs") tra i due valori sia minore di un valore
+    // minimale (in questo caso 10^-5)
+    if(abs(differenza) < 1e-5)
+        cout << "Si equivalgono" << endl;
+    else
+        if(differenza > 0)
+            cout << "Vale di più la somma in euro" << endl;
+        else
+            cout << "Vale di più la somma in dollari" << endl;
+}
+// ################################################################################################ //
+
+// ####################################### testStruct() ########################################### //
+
+struct Dipendente
+{
+    int matricola;
+    string cognome;
+    string nome;
+    double assenzeMedie;
+    bool stagionale;
+};
+
+void testStruct()
+{
+    Dipendente dip = {80857, "Bulfon", "Francesco", 12.6, true};
+    cout << "Matricola: " << dip.matricola << endl
+         << "Cognome: " << dip.cognome << endl
+         << "Nome: " << dip.nome << endl
+         << "Media assenze: " << dip.assenzeMedie << endl
+         << "Stagionale: " << dip.stagionale << endl;
+
+    cout << endl;
+
+    Dipendente personale[100];  // vettore di struct (contiene 100 dipendenti)
+    personale[0] = {167123, "Bregant", "Lorenzo", 9.4, false};
+    cout << "Matricola: " << personale[0].cognome << endl
+         << "Cognome: " << personale[0].cognome << endl
+         << "Nome: " << personale[0].nome << endl
+         << "Media assenze: " << personale[0].assenzeMedie << endl
+         << "Stagionale: " << personale[0].stagionale << endl;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
