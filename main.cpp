@@ -18,6 +18,9 @@
 #include <ctime>
 #include <iomanip>
 #include <cctype>
+#include "prof.h"
+#include <fstream> //header necessario per ifstream!
+#include <cstdio>
 
 using namespace std;
 
@@ -55,7 +58,10 @@ void intToString();
 void scambioFurbo();
 void checkVocCons();
 void dollariEuro();
-void testStruct();
+void testStructMp3();
+void leggiFile();
+void scriviFile();
+
 
 // ####################################  MAIN  #################################### //
 int main()
@@ -88,8 +94,8 @@ void menu()
         cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
         cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
         cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t\t"   << "30) scambioFurbo     ##" << endl;
-        cout << "##  31) checkVocCons" << "\t"   << "32) dollariEuro"     << "\t\t"   << "33) testStruct       ##" << endl;
-        cout << "##  34) "             << "\t\t" << "35) "                << "\t\t\t" << "36)                  ##" << endl;
+        cout << "##  31) checkVocCons" << "\t"   << "32) dollariEuro"     << "\t\t"   << "33) testStructMp3    ##" << endl;
+        cout << "##  34) leggiFile"    << "\t"   << "35) scriviFile"      << "\t\t"   << "36)                  ##" << endl;
         cout << "##  37) "             << "\t\t" << "38) "                << "\t\t\t" << "39)                  ##" << endl;
         cout << "##  40) "             << "\t\t" << "41) "                << "\t\t\t" << " 0) Termina          ##" << endl;
         cout << "#######################################################################\n";
@@ -158,7 +164,9 @@ void menu()
             case 30 : scambioFurbo(); break;
             case 31 : checkVocCons(); break;
             case 32 : dollariEuro(); break;
-            case 33 : testStruct(); break;
+            case 33 : testStructMp3(); break;
+            case 34 : leggiFile(); break;
+            case 35 : scriviFile(); break;
 
             default : cout << "Programma non esistente" << endl; break;
         } //end switch
@@ -1182,6 +1190,7 @@ void distribuisci(int m[0][13], const char *s[], const char *v[])
 }
 // ######################################################################################### //
 
+
 // ####################################### puntRef() ####################################### //
 // Fx che visualizza la differenza tra passaggio per indirizzo (puntatori) e per riferimento
 int moltiplicaInd(int* x, int* y);
@@ -1220,6 +1229,7 @@ int moltiplicaRef(int &x, int &y)
     return ris;
 }
 // ######################################################################################## //
+
 
 // ####################################### puntFx ####################################### //
 // Fx che visualizza l'uso dei puntatori a funzione (in questo caso array di puntatori a fx)
@@ -1261,6 +1271,7 @@ void f3(int c)
     cout << "Hai inserito " << c << " quindi è stata chiamata f3" << endl;
 }
 // ############################################################################################# //
+
 
 // ####################################### manipString() ####################################### //
 void manipString()
@@ -1323,6 +1334,7 @@ void manipString()
     cout << "\nLa lunghezza di \"" << string1 << "\" è: " << strlen(string1) << endl;
 }
 // ########################################################################################### //
+
 
 // ####################################### pokerHand() ####################################### //
 // Fx che mescola un mazzo di carte e ne distribuisce 5 al giocatore (poker), quindi controlla
@@ -1644,6 +1656,7 @@ string centmigl(int num, int aNum[], int s, string u[], string d[])
 }
 // #################################################################################### //
 
+
 // ################################# scambioFurbo() ################################### //
 // Fx che scambia il valore di due numeri senza utilizzare una terza variabile.
 // Quindi effettua un controllo su migliaia di combinazioni diverse per testarne la correttezza
@@ -1667,6 +1680,7 @@ void scambioFurbo()
         }
 }
 // ################################################################################################# //
+
 
 // ####################################### checkVocCons() ########################################## //
 // Fx che dato un carattere in input determina se è una vocale / costante o niente.
@@ -1694,6 +1708,7 @@ void checkVocCons()
 }
 // ################################################################################################ //
 
+
 // ####################################### dollariEuro() ########################################## //
 // Fx che compara somma di denaro in dollari ed euro e restituisce quale vale di più in base al tasso di cambio
 void dollariEuro()
@@ -1720,50 +1735,94 @@ void dollariEuro()
         else
             cout << "Vale di più la somma in dollari" << endl;
 }
-// ################################################################################################ //
+// ################################################################################################### //
 
-// ####################################### testStruct() ########################################### //
 
-struct Dipendente
+// ####################################### testStructMp3() ########################################### //
+
+// Questo progetti si appoggia ad una libreria personalizzata definita nel file "prof.cpp":
+// - "prof.cpp": file della libreria che contiene varie funzioni.
+// - "prof.h": file che contiene la lista delle funzioni della libreria personalizzata (utile per non dover
+//   dichiarare i prototipi delle funzioni nel file originale), viene richiamato tramite l'include (senza
+// <> che indicano la cartella standard).
+// Il "linker" si occuperà poi di collegare il giusto codice alle chiamate delle diverse funzioni.
+struct MP3  // struttura MP3 contenente 4 attributi
 {
-    int matricola;
-    string cognome;
-    string nome;
-    double assenzeMedie;
-    bool stagionale;
+    string titolo;
+    string autore;
+    int durata;
+    string url;
 };
 
-void testStruct()
+void testStructMp3()
 {
-    Dipendente dip = {80857, "Bulfon", "Francesco", 12.6, true};
-    cout << "Matricola: " << dip.matricola << endl
-         << "Cognome: " << dip.cognome << endl
-         << "Nome: " << dip.nome << endl
-         << "Media assenze: " << dip.assenzeMedie << endl
-         << "Stagionale: " << dip.stagionale << endl;
-
-    cout << endl;
-
-    Dipendente personale[100];  // vettore di struct (contiene 100 dipendenti)
-    personale[0] = {167123, "Bregant", "Lorenzo", 9.4, false};
-    cout << "Matricola: " << personale[0].cognome << endl
-         << "Cognome: " << personale[0].cognome << endl
-         << "Nome: " << personale[0].nome << endl
-         << "Media assenze: " << personale[0].assenzeMedie << endl
-         << "Stagionale: " << personale[0].stagionale << endl;
 
 }
+// ################################################################################################### //
 
 
+// ########################################## leggiFile() ############################################ //
+void leggiFile()
+{
+    string s = "";
+    ifstream leggi;
+
+    leggi.open("Documents/Lavoro/Repository/testingCpp/dati.txt", ios::in);
+
+    if(!leggi)
+        cout << "ERRORE: impossibile aprire il file" << endl;
+
+    while(leggi)
+    {
+        getline(leggi, s);
+        cout << s << endl;
+    }
+
+    leggi.close();
+}
+
+/*void leggiFile()
+{
+    //nome del file da aprire, si può mettere anche il percorso (es C:\\file.txt)
+    ifstream f("Users/franz/Documents/Lavoro/Repository/testingCpp/MP3.txt");
+    string s;
+
+    if(!f) {
+        cout << "Il file non esiste!";
+        exit(EXIT_FAILURE);
+        //return -1;
+    }
+
+    while(f.good()) //fino a quando c'è qualcosa da leggere ..
+    {
+        //legge tutta la riga dal file e la mette nella variabile s
+        getline(f, s);
+        cout<<s<<endl;
+    }
+    f.close(); //chiude il file
+}*/
+// #################################################################################################### //
 
 
+// ########################################## scriviFile() ############################################ //
+// l'operazione di scrittura è DISTRUTTIVA, se apro il file lo distruggo sovrascrivendolo (occorre implementare
+// il controllo per l'utente)
+void scriviFile()
+{
+    ofstream scrivi;  // file di output
 
+    scrivi.open("Documents/Lavoro/Repository/testingCpp/dati.txt", ios::out);
 
+    scrivi << "<html>" << endl;
+    scrivi << "  <head>" << endl;
+    scrivi << "    <title> Pagina web generata in automatico </title>" << endl;
+    scrivi << "  </head>" << endl;
+    scrivi << "  <body>" << endl;
+    scrivi << "  </body>" << endl;
+    scrivi << "</html>" << endl;
 
-
-
-
-
+    scrivi.close();   // se manca (in scrittura), l'ultima parte del buffer si perde (perdo l'ultimo blocco dei dati)
+}
 
 
 

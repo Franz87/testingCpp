@@ -37,6 +37,8 @@
 		</Compiler>
 		<Unit filename="esercizio1" />
 		<Unit filename="main.cpp" />
+		<Unit filename="prof.cpp" />
+		<Unit filename="prof.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
