@@ -18,9 +18,10 @@
 #include <ctime>
 #include <iomanip>
 #include <cctype>
-#include "prof.h"
+#include "franzLib.h"   // carica la libreria personale
 #include <fstream> //header necessario per ifstream!
 #include <cstdio>
+#include <string>
 
 using namespace std;
 
@@ -58,9 +59,11 @@ void intToString();
 void scambioFurbo();
 void checkVocCons();
 void dollariEuro();
-void testStructMp3();
 void leggiFile();
 void scriviFile();
+void libreriaMP3(); // DA FINIRE!!!
+void ramDinamica();
+void listeConcatRamDin();
 
 
 // ####################################  MAIN  #################################### //
@@ -83,22 +86,22 @@ void menu()
         cout << "\n\t\t*******************************\n";
         cout << "\t\t****   PROGRAMMI IN C++    ****\n";
         cout << "\t\t*******************************\n";
-        cout << "\n#######################################################################\n";
-        cout << "##   1) separaNumeri" << "\t"   << " 2) pariDispari"     << "\t\t"   << " 3) minMax           ##" << endl;
-        cout << "##   4) plotMatrix"   << "\t"   << " 5) mediaVoti"       << "\t\t"   << " 6) breakContinue    ##" << endl;
-        cout << "##   7) convBinDec"   << "\t"   << " 8) calcPagaOra"     << "\t\t"   << " 9) gameCrap         ##" << endl;
-        cout << "##  10) fattoriale"   << "\t"   << "11) fibonacci"       << "\t\t"   << "12) pasValRef        ##" << endl;
-        cout << "##  13) esAutosilo"   << "\t"   << "14) minMaxFloat"     << "\t\t"   << "15) indovinaNum      ##" << endl;
-        cout << "##  16) MCD"          << "\t\t" << "17) tripleNumValRef" << "\t"     << "18) arrayIstogramma  ##" << endl;
-        cout << "##  19) bubbleSort"   << "\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
-        cout << "##  22) giroCavallo"  << "\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
-        cout << "##  25) puntRef"      << "\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
-        cout << "##  28) pokerHand"    << "\t"   << "29) intToString"     << "\t\t"   << "30) scambioFurbo     ##" << endl;
-        cout << "##  31) checkVocCons" << "\t"   << "32) dollariEuro"     << "\t\t"   << "33) testStructMp3    ##" << endl;
-        cout << "##  34) leggiFile"    << "\t"   << "35) scriviFile"      << "\t\t"   << "36)                  ##" << endl;
-        cout << "##  37) "             << "\t\t" << "38) "                << "\t\t\t" << "39)                  ##" << endl;
-        cout << "##  40) "             << "\t\t" << "41) "                << "\t\t\t" << " 0) Termina          ##" << endl;
-        cout << "#######################################################################\n";
+        cout << "\n###############################################################################\n";
+        cout << "##   1) separaNumeri"      << "\t\t"   << " 2) pariDispari"     << "\t\t"   << " 3) minMax           ##" << endl;
+        cout << "##   4) plotMatrix"        << "\t\t"   << " 5) mediaVoti"       << "\t\t"   << " 6) breakContinue    ##" << endl;
+        cout << "##   7) convBinDec"        << "\t\t"   << " 8) calcPagaOra"     << "\t\t"   << " 9) gameCrap         ##" << endl;
+        cout << "##  10) fattoriale"        << "\t\t"   << "11) fibonacci"       << "\t\t"   << "12) pasValRef        ##" << endl;
+        cout << "##  13) esAutosilo"        << "\t\t"   << "14) minMaxFloat"     << "\t\t"   << "15) indovinaNum      ##" << endl;
+        cout << "##  16) MCD"               << "\t\t\t" << "17) tripleNumValRef" << "\t"     << "18) arrayIstogramma  ##" << endl;
+        cout << "##  19) bubbleSort"        << "\t\t"   << "20) ricBinaria"      << "\t\t"   << "21) prenotaAereo     ##" << endl;
+        cout << "##  22) giroCavallo"       << "\t\t"   << "23) esPuntatori"     << "\t\t"   << "24) mescolaCarte     ##" << endl;
+        cout << "##  25) puntRef"           << "\t\t\t" << "26) puntFx"          << "\t\t"   << "27) manipString      ##" << endl;
+        cout << "##  28) pokerHand"         << "\t\t"   << "29) intToString"     << "\t\t"   << "30) scambioFurbo     ##" << endl;
+        cout << "##  31) checkVocCons"      << "\t\t"   << "32) dollariEuro"     << "\t\t"   << "33) leggiFile        ##" << endl;
+        cout << "##  34) scriviFile"        << "\t\t"   << "35) libreriaMP3"     << "\t\t"   << "36) ramDinamica      ##" << endl;
+        cout << "##  37) listeConcatRamDin" << "\t"     << "38) "                << "\t\t\t" << "39)                  ##" << endl;
+        cout << "##  40) "                  << "\t\t\t"   << "41) "                << "\t\t\t" << " 0) Termina          ##" << endl;
+        cout << "###############################################################################\n";
         cout << "Che programma vuoi usare? ";
         cin >> scelta;
 
@@ -164,9 +167,11 @@ void menu()
             case 30 : scambioFurbo(); break;
             case 31 : checkVocCons(); break;
             case 32 : dollariEuro(); break;
-            case 33 : testStructMp3(); break;
-            case 34 : leggiFile(); break;
-            case 35 : scriviFile(); break;
+            case 33 : leggiFile(); break;
+            case 34 : scriviFile(); break;
+            case 35 : libreriaMP3(); break;
+            case 36 : ramDinamica(); break;
+            case 37 : listeConcatRamDin(); break;
 
             default : cout << "Programma non esistente" << endl; break;
         } //end switch
@@ -1738,69 +1743,31 @@ void dollariEuro()
 // ################################################################################################### //
 
 
-// ####################################### testStructMp3() ########################################### //
-
-// Questo progetti si appoggia ad una libreria personalizzata definita nel file "prof.cpp":
-// - "prof.cpp": file della libreria che contiene varie funzioni.
-// - "prof.h": file che contiene la lista delle funzioni della libreria personalizzata (utile per non dover
-//   dichiarare i prototipi delle funzioni nel file originale), viene richiamato tramite l'include (senza
-// <> che indicano la cartella standard).
-// Il "linker" si occuperà poi di collegare il giusto codice alle chiamate delle diverse funzioni.
-struct MP3  // struttura MP3 contenente 4 attributi
-{
-    string titolo;
-    string autore;
-    int durata;
-    string url;
-};
-
-void testStructMp3()
-{
-
-}
-// ################################################################################################### //
-
-
 // ########################################## leggiFile() ############################################ //
 void leggiFile()
 {
     string s = "";
     ifstream leggi;
+    string path = "Documents/Lavoro/Repository/testingCpp/";
+    string nomeFile = "";
 
-    leggi.open("Documents/Lavoro/Repository/testingCpp/dati.txt", ios::in);
+    cout << "Inserisci nome file da leggere: ";
+    cin >> nomeFile;
+
+    //nome del file da aprire, si può mettere anche il percorso (es C:\\file.txt)
+    leggi.open(path + nomeFile + ".txt", ios::in);
 
     if(!leggi)
         cout << "ERRORE: impossibile aprire il file" << endl;
 
-    while(leggi)
+    while(leggi)    //fino a quando c'è qualcosa da leggere ..
     {
-        getline(leggi, s);
+        getline(leggi, s);  //legge tutta la riga dal file e la mette nella variabile s
         cout << s << endl;
     }
 
-    leggi.close();
+    leggi.close();  //chiude il file
 }
-
-/*void leggiFile()
-{
-    //nome del file da aprire, si può mettere anche il percorso (es C:\\file.txt)
-    ifstream f("Users/franz/Documents/Lavoro/Repository/testingCpp/MP3.txt");
-    string s;
-
-    if(!f) {
-        cout << "Il file non esiste!";
-        exit(EXIT_FAILURE);
-        //return -1;
-    }
-
-    while(f.good()) //fino a quando c'è qualcosa da leggere ..
-    {
-        //legge tutta la riga dal file e la mette nella variabile s
-        getline(f, s);
-        cout<<s<<endl;
-    }
-    f.close(); //chiude il file
-}*/
 // #################################################################################################### //
 
 
@@ -1810,8 +1777,13 @@ void leggiFile()
 void scriviFile()
 {
     ofstream scrivi;  // file di output
+    string path = "Documents/Lavoro/Repository/testingCpp/";
+    string nomeFile = "";
 
-    scrivi.open("Documents/Lavoro/Repository/testingCpp/dati.txt", ios::out);
+    cout << "Inserisci nome file (omettere estensione): ";
+    cin >> nomeFile;
+
+    scrivi.open(path + nomeFile + ".txt", ios::out);
 
     scrivi << "<html>" << endl;
     scrivi << "  <head>" << endl;
@@ -1821,8 +1793,361 @@ void scriviFile()
     scrivi << "  </body>" << endl;
     scrivi << "</html>" << endl;
 
+    cout << "File creato correttamente" << endl;
+    cout << "Nome file: " << nomeFile << endl;
+    cout << "Path: " << path << endl;
+
     scrivi.close();   // se manca (in scrittura), l'ultima parte del buffer si perde (perdo l'ultimo blocco dei dati)
 }
+// ##################################################################################################### //
+
+
+// ########################################## libreriaMP3() ############################################ //
+// Questo progetti si appoggia ad una libreria personalizzata definita nel file "prof.cpp":
+// - "prof.cpp": file della libreria che contiene varie funzioni.
+// - "prof.h": file che contiene la lista delle funzioni della libreria personalizzata (utile per non dover
+//   dichiarare i prototipi delle funzioni nel file originale), viene richiamato tramite l'include (senza
+// <> che indicano la cartella standard).
+// Il "linker" si occuperà poi di collegare il giusto codice alle chiamate delle diverse funzioni.
+
+struct MP3  // struttura MP3 contenente 4 attributi
+{
+    string titolo;
+    string autore;
+    int durata;
+    string url;
+};
+
+int carica(string nomeFile, MP3 v[]);
+void visualizzaTutti(MP3 v[], int quantiMP3);
+void aggiungi(MP3 v[], int giaInseriti);
+
+void libreriaMP3()
+{
+    int numMP3 = 0; //MP3 gia' caricati
+
+    numMP3 = contaRighe("MP3.txt") / 4;	// calcola il numero di MP3 già inseriti
+    cout << "Numero righe: " << contaRighe("MP3.txt") << endl;
+    cout << "Numero MP3: " << numMP3 << endl;
+
+    attendi();
+
+    int maxMP3 = numMP3 + 30;   // l'array ha tanti elementi quanti sono gli MP3 nel file + 30 per nuovi inserimenti
+
+    // C++ non permette di assegnare una dimensione variabile agli array, quindi occorre utilizzare i puntatori che permettono di
+    // allocare dinamicamente un array.
+    // N.B. Alla fine occorre liberare la memoria utilizzando il comando: "delete [] nomeArray"
+    MP3 *collezione;
+    collezione = new MP3[maxMP3];   // array di tipo MP3 contenente un numero variabile di elementi
+
+    delete [] collezione;   // ?????????????????????? quando va inserito ????????
+    /*string riga_1 = leggiRiga("MP3.txt");
+    cout << "Riga 1: " << riga_1 << endl;
+    string riga_2 = leggiRiga("MP3.txt");
+    cout << "Riga 2: " << riga_2 << endl;*/
+
+    int scelta = -1;
+
+    //menu principale
+    do
+    {
+        //system("cls"); //pulisci schermo
+        cout << "1 - Carica catalogo da disco (MP3.txt)" << endl;
+        cout << "2 - Salva catalogo su disco (MP3.txt)" << endl;
+        cout << "3 - Aggiungi una scheda MP3" << endl;
+        cout << "4 - Cerca una scheda " << endl;
+        cout << "5 - Visualizza tutti" << endl;
+
+        cout << "9 - FINE PROGRAMMA" << endl;
+
+        cout <<"SCEGLI -> ";
+        cin >> scelta;
+
+        switch(scelta)
+        {
+            case 1 : numMP3 = carica("MP3.txt", collezione); break;
+            /*case 2 : salva("MP3.txt", collezione, numMP3); break;*/
+            case 3 :
+                if (numMP3 < maxMP3)
+                {
+                    aggiungi(collezione, numMP3);
+                    numMP3++;
+                }
+                else
+                {
+                    cout << "Vettore pieno ... impossibile inserire" << endl;
+                    cout << "Premi un tasto per continuare ...";
+                    attendi();
+                }
+                break;
+            /*case 4 :
+            {
+                string titoloCercato = ""; //usata per chiamare la ricerca
+                int pos = -1;
+
+                cout << "Inserisci il titolo da cercare: " << endl;
+                cin >> titoloCercato;
+
+                if((pos = cerca(collezione, numMP3, titoloCercato)) >= 0)
+                {
+                    cout << "Titolo: " << collezione[pos].titolo << endl;
+                    cout << "Autore: " << collezione[pos].autore << endl;
+                    cout << "Durata: " << collezione[pos].durata << endl;
+                    cout << "url: " << collezione[pos].url << endl;
+
+                    attendi("Premi un tasto per continuare");
+                }
+                else
+                    attendi("MP3 non trovato. Premi un tasto per continuare...");
+                }
+                break;*/
+            case 5 : visualizzaTutti(collezione, numMP3); break;
+        }
+
+    } while (scelta != 9);
+}
+
+int carica(string nomeFile, MP3 v[])
+{
+   int cont = 0, nRiga = 0;
+   string riga = leggiRiga(nomeFile);
+
+   while (riga != "#FINITO#")
+   {
+      v[cont].titolo = riga;    // titolo
+
+      riga = leggiRiga(nomeFile);   // autore
+      v[cont].autore = riga;
+
+      riga = leggiRiga(nomeFile);   // durata
+      v[cont].durata = atoi(riga.c_str());
+
+      riga = leggiRiga(nomeFile);   // url
+      v[cont].url = riga;
+
+      riga = leggiRiga(nomeFile);
+
+      cont ++;
+   }
+
+   return cont;
+}
+
+void visualizzaTutti(MP3 v[], int quantiMP3)
+{
+    for (int i = 0; i < quantiMP3; i++)
+    {
+        cout << "Titolo: " << v[i].titolo<< endl;
+        cout << "Autore: " << v[i].autore << endl;
+        cout << "Durata: " << v[i].durata << endl;
+        cout << "url: " << v[i].url << endl;
+        cout << "--------------------------------" << endl;
+    }
+
+    attendi();
+}
+
+//maxMP3: dimensione vettore struct da non superare
+//giaInseriti: mp3 attualmente presenti nel vettore
+//RESTITUISCE:
+void aggiungi(MP3 v[], int giaInseriti)
+{
+    cout << "Inserire Titolo: ";
+    cin >> v[giaInseriti].titolo;
+
+    cout << "\nInserire Autore: ";
+    cin >> v[giaInseriti].autore;
+
+    cout << "\nInserire Durata (in sec.): ";
+    cin >> v[giaInseriti].durata;
+
+    cout << "\nInserire indirizzo da cui scaricare: ";
+    cin >> v[giaInseriti].url;
+}
+// ##################################################################################################### //
+
+
+// ########################################## ramDinamica() ############################################ //
+// Esempio: in Paint, una foto può occupare diversi MB ma il progammatore non sa a priori la dimensione
+// esatta (non è quindi possibile dichiarare un array di dimensioni fisse)
+// (RAM STATICA) Normalmente nella definizinoe di un array la dimensione della RAM viene allocata sin dal
+// primo secondo.
+// Per risolvere questo problema occorre lavorare con la RAM DINAMICA (tramite il comando "malloc" in C)
+//   1 - All'inizio non ci sono foto aperte --> 0 MB occupati nella RAM
+//   2 - Man mano che vengono aperte foto la RAM viene allocata in base alle dimensioni richieste.
+//   3 -
+
+void ramDinamica()
+{
+    int *puntatore_1 = NULL;  // puntatore che contiene l'indirizzo di una variabile di tipo int
+
+    // Facciamo spazio per la variabile int
+    // Si chiede alla "malloc" se nella RAM è disponibile un blocco contiguo abbastanza grande per un numero int
+    // Solo il sistema sa da che blocco parte e:
+    //     - se è presente --> restituisce l'indirizzo iniziale del blocco trovato
+    //     - se non è presente --> restituisce NULL
+    // Il tipo restituito da malloc è void, verrà quindi specificato in base a cosa si sta gestendo (es. (int *))
+    //puntatore = (int *) malloc(sizeof(int));
+
+    puntatore_1 = new int;    // codice C++ equivalente all'istruzione "malloc"
+
+    *puntatore_1 = 234;  // è il valore dell'intero
+
+    cout << "\nValore: " << *puntatore_1
+         << "\nMemorizzato all'indirizzo: " << puntatore_1
+         << "\nDi dimensione (int): " << sizeof(int) << " byte"
+         << endl;
+    // ############################################################
+
+    // In C non esistono le stringhe, che vengono viste come array di char
+    char *puntatore_2;    // puntatore a carattere
+    puntatore_2 = "sasso";
+    cout << puntatore_2 << ": "   // viene visualizzata la stringa completa
+         << (void *) puntatore_2  // indirizzo dell'array di caratteri (primo elemento)
+         << *puntatore_2  // essendo un puntatore a caratteri, viene visualizzato solo il primo carattere (quello puntato dal puntatore)
+         << endl;
+    // ############################################################
+
+    // double *puntatore_3 = (double *) malloc(1000000 * sizeof(double));   // C
+    double *puntatore_3 = new double[1000000];  // C++
+
+    *puntatore_3 = 3.14;
+    puntatore_3[560000] = 456.234;
+
+    cout << puntatore_3[560000] << endl;
+
+    // free(puntatore_3);  // C (libera la memoria puntata da puntatore_3 e la rende disponibile per altre operazioni del sistema) IMPORTANTE
+    delete [] puntatore_3;  // C++
+    // ############################################################
+
+    // Metodo per convertire una stringa C++ nel corrispondente C   [Lezione 14-15 C - fcamuso]
+    // E' consigliabile creare una funzione "allocaStringa(string)" che esegue gli stessi comandi e inserirla nella libreria
+    string s = "sono un oggetto string (C++)";  // contiene anche carattere \0 di terminazione stringa
+
+    // Otteniamo un blocco di 28 byte puntati da puntatore_4 che non contengono nulla (s.length = 28 byte)
+    char *puntatore_4 = (char *) malloc(s.length() * sizeof(char) + 1);   // alloca uno spazio grande quanto un char * lunghezza dell'array s + 1 (per \0)
+
+    strcpy(puntatore_4, s.c_str()); // copia, in un array di caratteri, la stringa e restituisce il puntatore
+    // puntatore_4 ora contiene una copia (in c-string) di s
+
+    cout << puntatore_4 << endl;
+}
+// ########################################################################################################### //
+
+
+// ########################################## listeConcatRamDin() ############################################ //
+struct mp3
+{
+    char *titolo;
+    char *autore;
+    int durata;
+    char *url;
+
+    mp3 *succ;  // puntatore all'oggetto sucessivo della lista
+};
+
+void ins_head(mp3* &p, string tit, string aut, int dur, string url);
+void stampaLista(mp3* p);
+
+// Fx che crea la lista concatenata, aggancia i vari nodi tramite i puntatori "succ"
+void ins_head(mp3* &p, string tit, string aut, int dur, string url)    // passaggio parm. per indirizzo (&nomeVar)
+// la fx può quindi cambiare in modo permanente la variabile esterna chiamata
+// Ogni volta il nuovo nodo viene aggiunto all'inizio della lista!!!
+{
+    mp3* p2 = NULL;
+    p2 = new mp3;
+
+    p2 -> titolo = allocaStringa(tit);
+    p2 -> autore = allocaStringa(aut);
+    p2 -> durata = dur;
+    p2 -> url = allocaStringa(url);
+
+    p2 -> succ = p;
+
+    p = p2;
+}
+
+// Fx che stampa la lista concatenata (procede dalla testa alla coda della lista)
+void stampaLista(mp3* p)    // passaggio per variabile (COPIA del puntatore)
+{
+    while(p != NULL)
+    {
+        cout << p -> titolo << endl;
+        cout << p -> autore << endl;
+        cout << p -> durata << endl;
+        cout << p -> url << endl;
+        cout << "----------" << endl;
+        p = p -> succ;  // ora si punta l'oggetto successivo
+    }
+}
+
+void listeConcatRamDin()
+{
+    mp3 *head_1 = NULL;   // inzialmente la lista è vuota quindi la testa della lista punta ad un valore nullo
+
+    // head = (mp3 *) malloc(sizeof(mp3)); // [C]
+    head_1 = new mp3; // [C++] alloco lo spazio per l'oggetto della lista (dimensioni = alla struct)
+
+    // (*head).succ = NULL; // equivalente all'istruzione seguente
+    head_1 -> succ = NULL;  // [C++] devo passare dal puntatore all'oggetto puntato
+
+    // Riempiamo la parte informativa dell'oggetto della lista
+    head_1 -> titolo = "Titolo1"; // comodo e intuitivo
+    // Oppure si può anche fare con cin/cout:
+    string a = "";
+    cout << "Inserire autore primo MP3: ";
+    cin >> a;
+    head_1 -> autore = allocaStringa(a);    // occorre allocare la stringa e poi inserirla nel campo della struct
+    head_1 -> durata = 240;   //in secondi
+    head_1 -> url = "www.asdtenniscampagnuzza.it";
+
+    // Ora creiamo un nuovo oggetto della lista e per farlo occorre creare un nuovo puntatore
+    // Se utilizzo di nuovo "head" (è corretto) ma viene perso il blocco creato precedentemente (non ci sono più
+    // riferimenti per ritrovarlo). Inoltre non è più possibile restituire la memoria occupata da quel blocco!!!
+    mp3 *head_2 = NULL; // creo il nuovo puntatore
+    head_2 = new mp3;   // alloco lo spazio in memoria per l'oggetto
+
+    head_2 -> succ = NULL;  // dichiaro il puntatore all'oggetto successivo
+    // Info secondo blocco
+    head_2 -> titolo = "Titolo2";
+    head_2 -> autore = "Autore2";
+    head_2 -> durata = 123;
+    head_2 -> url = "www.google.it";
+
+    // Per ora i due oggetti della lista sono separati (non sono stati definiti ancora i puntatori che li legano)
+    // Per prima cosa il puntatore "succ" del secondo blocco (appena creato) dovrà quindi puntare al secondo oggetto
+    head_2 -> succ = head_1;    // aggancio i due nodi
+    // Ora basta che la head_1 precedente punti al primo elemento della lista (diventato head_2)
+    head_1 = head_2;
+
+    cout << "head_1: " << head_1 << endl;   // indirizzo del secondo oggetto della lista
+    cout << "head_1 -> succ: " << head_1 -> succ << endl;   // punta a NULL in quanto è l'ultimo elemento della lista
+    cout << "head_2: " << head_2 << endl;   // indirizzo del primo oggetto della lista
+    cout << "head_2 -> succ: " << head_2 -> succ << endl << endl;   // punta al secondo oggetto della lista
+
+    // #######################################################################
+    // Creiamo dinamicamente la struct con 5 oggetti, concateniamo i vari nodi e poi stampiamo a video la lista
+    mp3 *head_3 = NULL;
+    string num = "";
+
+    for(int i = 0; i < 5; i++)  // creiamo dinamicamente la struct (5 oggetti)
+    {
+        num = to_string(i);   // trasforma intero in stringa [C++]
+        ins_head(head_3, "Titolo"+num, "Autore"+num, i, "url"+num);    // crea la struttura della lista concatenata
+    }
+
+    stampaLista(head_3);    // stampa le info della lista
+
+    attendi();
+}
+
+
+
+
+
+
+
+
 
 
 

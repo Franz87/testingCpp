@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <cstdio>
 //#include <conio.h>
 
 using namespace std;
@@ -24,13 +25,22 @@ extern char *allocaStringa(string s)
   return strcpy(stringa, s.c_str());
 }
 
-extern void attendi(string messaggio)
+/*extern void attendi(string messaggio)
 {
   cout << messaggio << endl;
   cout << "Premi un tasto per continuare ..." << endl;
   //while (!kbhit());
   //getch();
   getchar();
+}*/
+
+extern void attendi(string messaggio)
+{
+    //bisogna pulire lo stream
+    cout << messaggio << endl;
+    cout << "Press [Enter] to continue..."<< endl;
+    cin.ignore();
+    cin.get();
 }
 
 extern bool cercaStringa(string cercata, string cercaQui)

@@ -35,10 +35,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="esercizio1" />
+		<Unit filename="franzLib.cpp" />
+		<Unit filename="franzLib.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="prof.cpp" />
-		<Unit filename="prof.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -7,7 +7,7 @@
 	<ctime>
 	<iomanip>
 
-1415099163 source:/Users/franz/Documents/Lavoro/Repository/testingCpp/main.cpp
+1416484415 source:/Users/franz/Documents/Lavoro/Repository/testingCpp/main.cpp
 	<iostream>
 	<climits>
 	<cmath>
@@ -15,16 +15,29 @@
 	<ctime>
 	<iomanip>
 	<cctype>
-	"prof.h"
+	"franzLib.h"
 	<fstream>
+	<cstdio>
 
 1332784958 /Users/franz/Documents/Lavoro/Repository/testingCpp/prof.h
 	<string>
 
-1414790935 source:/Users/franz/Documents/Lavoro/Repository/testingCpp/prof.cpp
+1415878348 source:/Users/franz/Documents/Lavoro/Repository/testingCpp/prof.cpp
 	<cstdlib>
 	<iostream>
 	<fstream>
 	<string>
 	<cmath>
+	<cstdio>
+
+1416578412 source:/Users/franz/Documents/Lavoro/Repository/testingCpp/franzLib.cpp
+	<cstdlib>
+	<iostream>
+	<fstream>
+	<string>
+	<cmath>
+	<cstdio>
+
+1415906376 /Users/franz/Documents/Lavoro/Repository/testingCpp/franzLib.h
+	<string>
 
