@@ -14,8 +14,8 @@
 #include <iostream>
 #include <climits>
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
+#include <cstdlib>  // rand() e srand()
+#include <ctime>    // time()
 #include <iomanip>
 #include <cctype>
 #include "franzLib.h"   // carica la libreria personale
@@ -64,6 +64,8 @@ void scriviFile();
 void libreriaMP3(); // DA FINIRE!!!
 void ramDinamica();
 void listeConcatRamDin();
+void floatingPoint();
+void numCasuali();
 
 
 // ####################################  MAIN  #################################### //
@@ -99,8 +101,8 @@ void menu()
         cout << "##  28) pokerHand"         << "\t\t"   << "29) intToString"     << "\t\t"   << "30) scambioFurbo     ##" << endl;
         cout << "##  31) checkVocCons"      << "\t\t"   << "32) dollariEuro"     << "\t\t"   << "33) leggiFile        ##" << endl;
         cout << "##  34) scriviFile"        << "\t\t"   << "35) libreriaMP3"     << "\t\t"   << "36) ramDinamica      ##" << endl;
-        cout << "##  37) listeConcatRamDin" << "\t"     << "38) "                << "\t\t\t" << "39)                  ##" << endl;
-        cout << "##  40) "                  << "\t\t\t"   << "41) "                << "\t\t\t" << " 0) Termina          ##" << endl;
+        cout << "##  37) listeConcatRamDin" << "\t"     << "38) floatingPoint"   << "\t"     << "39) numCasuali       ##" << endl;
+        cout << "##  40) "                  << "\t\t\t" << "41) "                << "\t\t\t" << " 0) Termina          ##" << endl;
         cout << "###############################################################################\n";
         cout << "Che programma vuoi usare? ";
         cin >> scelta;
@@ -172,6 +174,8 @@ void menu()
             case 35 : libreriaMP3(); break;
             case 36 : ramDinamica(); break;
             case 37 : listeConcatRamDin(); break;
+            case 38 : floatingPoint(); break;
+            case 39 : numCasuali(); break;
 
             default : cout << "Programma non esistente" << endl; break;
         } //end switch
@@ -2038,6 +2042,7 @@ void ramDinamica()
 // ########################################## listeConcatRamDin() ############################################ //
 struct mp3
 {
+    // Vengono utilizzati i puntatori a carattere in quanto in C non esistono le stringhe (in C++ basta usare string)
     char *titolo;
     char *autore;
     int durata;
@@ -2047,10 +2052,13 @@ struct mp3
 };
 
 void ins_head(mp3* &p, string tit, string aut, int dur, string url);
+void ins_tail(mp3* &p, string tit, string aut, int dur, string url);
+mp3* cerca(mp3* p, string aut);
+void distruggiLista(mp3* &p);
 void stampaLista(mp3* p);
 
 // Fx che crea la lista concatenata, aggancia i vari nodi tramite i puntatori "succ"
-void ins_head(mp3* &p, string tit, string aut, int dur, string url)    // passaggio parm. per indirizzo (&nomeVar)
+void ins_head(mp3* &p, string tit, string aut, int dur, string url)    // passaggio parm. per riferimento (&nomeVar)
 // la fx può quindi cambiare in modo permanente la variabile esterna chiamata
 // Ogni volta il nuovo nodo viene aggiunto all'inizio della lista!!!
 {
@@ -2065,6 +2073,69 @@ void ins_head(mp3* &p, string tit, string aut, int dur, string url)    // passag
     p2 -> succ = p;
 
     p = p2;
+}
+
+// OCCHIO: è diverso dalla procedura stampaLista!
+// Ci si ferma quando si trova un nodo il cui succ = NULL (quindi ci si trova sull'ultimo nodo)
+// Viene inserito il nodo e poi bisogna ricordarsi di inserire il succ = NULL nel nodo appena inserito
+void ins_tail(mp3* &p, string tit, string aut, int dur, string url)
+{
+    // Partendo dalla lista vuota, il primo inserimento è uguale a quello di "ins_head()" quindi cambia
+    // il valore di head (che successivamente non verrà cambiato)
+    if(p == NULL)   // lista inizialmente vuota
+        ins_head(p, tit, aut, dur, url);    // inserisco il primo nodo
+    else
+    {
+        mp3* tmp = p;   // punta alla testa della lista
+
+        while(tmp -> succ != NULL)  // finché non troviamo l'ultimo nodo (contenente succ = NULL)
+            tmp = tmp -> succ;  // spostiamo avanti tmp (al prossimo succ)
+
+        // Si crea quindi il nuovo nodo da inserire in coda
+        mp3 * p2 = NULL;
+        p2 = new mp3;
+
+        p2 -> titolo = allocaStringa(tit);
+        p2 -> autore = allocaStringa(aut);
+        p2 -> durata = dur;
+        p2 -> url = allocaStringa(url);
+        p2 -> succ = NULL;  // aggiungiamo il valore "succ = NULL" all'ultimo nodo
+
+        tmp -> succ = p2;
+    }
+}
+
+mp3* cerca(mp3* p, string aut)  // p passato per valore in quanto non devo modificare la lista
+{
+    while(p != NULL && strcmp(p -> autore, aut.c_str()))
+        p = p -> succ;
+
+    return p;
+}
+
+void distruggiLista(mp3 * &p)  // Passaggio per riferimento
+{
+    mp3 * tmp = NULL;   // puntatore temporaneo per salvare gli indirizzi del nodo successivo a quello da cancellare
+
+    while(p != NULL)
+    {
+        tmp = p -> succ;    // copiamo nel tmp l'indirizzo del nodo seguente (a quello da cancellare) [aggancio]
+
+        // Liberiamo la memoria occupata dalle stringhe puntate dai field dell'mp3 (cfr. ATTENZIONE)
+        free(p -> titolo);
+        free(p -> autore);
+        free(p -> url);
+
+        free(p);    // ora si può cancellare il nodo puntato da p (libero p)
+        p = tmp;    // assegno a p lo stesso indirizzo di tmp (nodo successivo a quello cancellato)
+        // il valore finale di p sarà quindi NULL
+
+        // ATTENZIONE, l'istruzione "free(p)" si limita in questo caso a cancellare solo i campi della struct,
+        // ma la struct è composta da puntatori a caratteri (che puntano quindi ad altri campi char). Quindi, in realtà,
+        // il nodo struct viene eliminato ma rimangono in memoria i campi char (titolo, autore, url)
+        // Occorre fare il free() su ogni campo.
+        // Questo discorso vale solo per i puntatori a caratteri, non per gli altri tipi quali int, double, bool, ...
+    }
 }
 
 // Fx che stampa la lista concatenata (procede dalla testa alla coda della lista)
@@ -2130,19 +2201,107 @@ void listeConcatRamDin()
     mp3 *head_3 = NULL;
     string num = "";
 
+    // Inserimento in TESTA
     for(int i = 0; i < 5; i++)  // creiamo dinamicamente la struct (5 oggetti)
     {
         num = to_string(i);   // trasforma intero in stringa [C++]
         ins_head(head_3, "Titolo"+num, "Autore"+num, i, "url"+num);    // crea la struttura della lista concatenata
     }
 
+    cout << "\nINSERIMENTO IN TESTA" << endl;
     stampaLista(head_3);    // stampa le info della lista
+
+    distruggiLista(head_3); // viene eliminata la lista
+    cout << "Dopo la distruzione: \n";
+    stampaLista(head_3);    // non stampa niente in quanto la lista è stata eliminata
+
+    // Inserimento in CODA
+    for(int i = 0; i < 5; i++)  // creiamo dinamicamente la struct (5 oggetti)
+    {
+        num = to_string(i);   // trasforma intero in stringa [C++]
+        ins_tail(head_3, "Titolo"+num, "Autore"+num, i, "url"+num);    // crea la struttura della lista concatenata
+    }
+
+    cout << "\nINSERIMENTO IN CODA" << endl;
+    stampaLista(head_3);
+
+    // Ricerca dell'autore in un MP3
+    mp3* cercato = cerca(head_3, "Autore3");
+
+    if(cercato != NULL)
+        cout << "\nL'MP3 è stato trovato: " << cercato -> autore << " - " << cercato -> titolo << endl;
+    else
+        cout << "Non trovato" << endl;
 
     attendi();
 }
+// ########################################################################################################### //
 
 
+// ############################################ floatingPoint() ############################################## //
+void floatingPoint()
+{
+    // l'operatore divisione quando è applicato su due (int) ritorna il quoziente (int)
+    cout << 1/3 << endl;
+    // occorre trasformare uno dei due numeri in floating point
+    cout << 1/3. << endl;   // aggiungo il punto per indicare che il 3 è in floating point
+    // se forzassi il float non funzionerebbe in quanto:
+    cout << (float) (1/3) << endl;  // prima esegue 1/3 tornando 0 e poi trasforma 0 in floating point (rimanendo 0)
 
+    // Vediamo la differenza tra i tre tipi di floting point
+    float f = 1./3;
+    float f2 = 5.3F;    // forziamo f2 a float (di default è double)
+    double d = 1./3;
+    long double ld = 1./3;  // il calcolo è fatto tra due double (quindi torna un double)
+    long double LD = 1.L/3; // aggiungo il suffisso L per eseguire il calcolo tra long double e int (torna long double)
+
+    // Di default il C++ utilizza il tipo double
+    // Inoltre utilizza un formato di circa 6 cifre dopo la virgola, quindi per accorgerci delle differenze tra
+    // i tipi occorre aumentare la precisione di stampa:
+    cout.precision(20);
+
+    cout << "Float: " << f << endl;  // quello meno preciso (si perde dopo la 7a cifra)
+    cout << "Float con suffisso F: " << f2 << endl;
+    cout << "Double: " << d << endl;
+    cout << "Long Double: " << ld << endl;
+    cout << "Long Double con suffisso L: " << LD << endl;
+
+    // Calcola la dimensione dei tipi floating point
+    cout << sizeof(float) << endl;  // 4
+    cout << sizeof(double) << endl; // 8
+    cout << sizeof(long double) << endl;    // 16
+
+    // Calcola il numero min e max di ogni tipo floating point
+    cout << "Float" << endl
+         << " " << numeric_limits<float>::lowest() << endl  // -3*10^38
+         << " " << numeric_limits<float>::max() << endl;    // 3*10^38
+    cout << "Double" << endl
+         << " " << numeric_limits<double>::lowest() << endl // -1*10^308
+         << " " << numeric_limits<double>::max() << endl;   // 1*10^308
+    cout << "Long Double" << endl
+         << " " << numeric_limits<long double>::lowest() << endl    // -1*10^4932
+         << " " << numeric_limits<long double>::max() << endl;      // 1*10^4932
+}
+// ########################################################################################################### //
+
+
+// ############################################## numCasuali() ############################################### //
+// Fx che conta quane volte è necessario lanciare un dado simulato affinché esca per tre volte il numero 6
+void numCasuali()
+{
+    // rand() genera un numero casuale tra 0 e RAND_MAX (dipende dalla macchina su cui lavoriamo)
+    cout << rand() << endl;
+    cout << rand() << endl;
+    cout << "Max numero generabile: " << RAND_MAX << endl;
+
+    // il numero generato è diviso per 6 e si ritorna il resto (ovviamente è al massimo 5)
+    cout << rand() % 6 << endl;
+    cout << rand() % 6 << endl;
+
+    // il numero generato è diviso per 6 e si ritorna il resto (ovviamente è al massimo 5) e quindi aggiungo 1
+    cout << 1 + rand() % 6 << endl;
+    cout << 1 + rand() % 6 << endl;
+}
 
 
 
